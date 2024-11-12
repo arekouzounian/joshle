@@ -7,6 +7,12 @@ let currentGuess = [];
 let nextLetter = 0;
 let rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
 
+let colorsToEmojisMap = {
+  "gray": "⬛️",
+  "yellow": "🟨",
+  "green": "🟩"
+};
+
 function initBoard() {
   let board = document.getElementById("game-board");
 
@@ -132,6 +138,32 @@ function insertLetter(pressedKey) {
   nextLetter += 1;
 }
 
+function getBoardRepresentation() {
+  let rows = document.getElementsByClassName("letter-row");
+
+  let ret = "Joshle\n\n";
+
+  for(let i = 0; i < rows.length; ++i) {
+    let valid_row = false;
+
+    for(let j = 0; j < rows[i].children.length; ++j)
+    {
+      let cell = rows[i].children[j];
+      if (cell.style.backgroundColor != "") {
+        ret += colorsToEmojisMap[cell.style.backgroundColor]; // no error checking, this is bad
+
+        valid_row = true;
+      }
+    }
+
+    if (valid_row) {
+      ret += "\n";
+    }
+  }
+
+  return ret; 
+}
+
 const animateCSS = (element, animation, prefix = "animate__") =>
   // We create a Promise and return it
   new Promise((resolve, reject) => {
@@ -200,9 +232,9 @@ if (navigator.share) {
 
   shareBtn.addEventListener("click", async () => {
     try {
-      await navigator.share({text: "joshle"});
+      await navigator.share({text: getBoardRepresentation()});
     } catch (e) {
       console.error("Error sharing", e);
     }
   });
-}
+} 
