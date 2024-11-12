@@ -192,3 +192,17 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
 });
 
 initBoard();
+
+
+if (navigator.share) {
+  let shareBtn = document.getElementById("shareBtn"); 
+  shareBtn.style.visibility = "visible";
+
+  shareBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share({text: "joshle"});
+    } catch (e) {
+      console.error("Error sharing", e);
+    }
+  });
+}
